@@ -69,3 +69,13 @@ If verification surfaces a problem the arena did not catch, either Phase A was w
 ## Outputs
 
 One synthesized artifact. One short synthesis note alongside, naming the base, the grafts (with source candidate), the rejections, the dropouts if any, and the verification result.
+
+
+### Skydive adaptation
+
+In this Skydive environment:
+- Replace every Cursor `Task` spawn with the `subagent` tool: `subagent({ tasks: [{ task, title, persona?, model?, timeoutMinutes? }] })`. Multiple workers = multiple objects in the `tasks` array, fired in one call.
+- Model config comes from this repo's `models.md` (org-wide mapping) instead of `~/.cursor/rules/pstack-models.mdc`. Role names differ: read models.md.
+- `subagent_type: "Comment Sicko"` → spawn a subagent with `persona` set to the contents of the `agents/comment-sicko.md` file. `poteto-agent` → `persona` from `agents/poteto-agent.md`.
+- Steering/inspection: `platform conversations show <id>` to read a worker's live state, `platform conversations post <id> --message "..."` to steer.
+- No `environment: "cloud"/"local"`; workers run in their own sandbox. Repo access = the worker clones it itself.

@@ -31,7 +31,7 @@ Each explorer gets the prompt in `references/explorer-prompt.md` with its angle 
 
 ## Step 2b. Direct Explain (simple questions)
 
-Spawn one Task subagent that explores and explains in one pass:
+Spawn one Skydive subagent that explores and explains in one pass:
 
 - `subagent_type`: `generalPurpose`
 - `model`: the `how explainer` line, default `claude-opus-5-5-max`
@@ -41,7 +41,7 @@ Build its prompt from `references/explainer-prompt.md` without the explorer-find
 
 ## Step 3. Synthesize (complex questions only)
 
-Once all explorers have returned, spawn one Task subagent to synthesize their findings into one explanation:
+Once all explorers have returned, spawn one Skydive subagent to synthesize their findings into one explanation:
 
 - `subagent_type`: `generalPurpose`
 - `model`: the `how explainer` line, default `claude-opus-5-5-max`
@@ -56,3 +56,13 @@ Present the explainer's output to the user. Light edits for clarity or context f
 ## Output Format
 
 The explanation uses the sections defined in `references/explainer-prompt.md`, dropping any that do not apply: Overview, Key Concepts, How It Works, Where Things Live, Gotchas.
+
+
+### Skydive adaptation
+
+In this Skydive environment:
+- Replace every Cursor `Task` spawn with the `subagent` tool: `subagent({ tasks: [{ task, title, persona?, model?, timeoutMinutes? }] })`. Multiple workers = multiple objects in the `tasks` array, fired in one call.
+- Model config comes from this repo's `models.md` (org-wide mapping) instead of `~/.cursor/rules/pstack-models.mdc`. Role names differ: read models.md.
+- `subagent_type: "Comment Sicko"` → spawn a subagent with `persona` set to the contents of the `agents/comment-sicko.md` file. `poteto-agent` → `persona` from `agents/poteto-agent.md`.
+- Steering/inspection: `platform conversations show <id>` to read a worker's live state, `platform conversations post <id> --message "..."` to steer.
+- No `environment: "cloud"/"local"`; workers run in their own sandbox. Repo access = the worker clones it itself.

@@ -27,8 +27,19 @@ Open a todolist with one entry per phase before launching anything.
 
 ## Phase B: Fan out
 
-Spawn all N workers in one message with `subagent_type: generalPurpose`, `environment: "cloud"`, `run_in_background: true`, and the step 4 model, left unset for `auto` or `inherit-parent`. Use `environment: "local"` only when the worker needs access to something on the user's computer.
+### Skydive adaptation (replaces Cursor spawn primitive)
 
+Spawn workers with the `subagent` tool available in this environment:
+
+```
+subagent({ tasks: [{ task: "<worker brief>", title: "<3-6 word title>", persona: "<optional extra system prompt>", model: "<model id from the org's model map, e.g. anthropic/claude-opus-4-8>", timeoutMinutes: 30 }] })
+```
+
+- Fire multiple workers by passing multiple task objects in one `tasks` array — they run in parallel and each rewakes you with its result.
+- `model` must be a real catalogued model id; omit it to inherit your own model.
+- Read worker output via the platform (`platform conversations show <id>`) if you need mid-run state; steer with `platform conversations post <id> --message "..."`.
+- There is no default platform sandbox — all workers run in the platform sandbox by default. If a brief needs repo access, the worker clones it itself in its own sandbox.
+- If the brief needs repo access, the worker clones it itself in its own sandbox.
 When a worker must start from a non-default pushed branch, pass `cloud_base_branch`.
 
 Every brief stands alone. Include the goal, scope, exact slice or race arm, how to verify, and what to report. Reports use `PASS`, `ISSUES`, or `BLOCKED` with evidence. A worker that can prove a defect reports `ISSUES` and lists every issue it can prove, not only the first.
