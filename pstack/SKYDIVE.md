@@ -15,5 +15,5 @@ This is the DesignSpark Studio fork of [cursor/plugins pstack](https://github.co
 
 ## Install (each agent runs in its own sandbox)
 ```
-bash <(curl -fsSL https://raw.githubusercontent.com/samuelpullen15-droid/pstack-skydive/main/install.sh) <full|research|prose>
+bash <(curl -fsSL https://raw.githubusercontent.com/samuelpullen15-droid/pstack-skydive/main/install.sh) <ROLE>  # full | research | prose
 ```
